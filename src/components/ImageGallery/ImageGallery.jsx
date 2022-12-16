@@ -1,9 +1,9 @@
-import './ImageGallery.css';
+import { GalleryBox, Gallery } from './ImageGallery.styled';
 
 export const ImageGallery = ({ children }) => {
   return (
-    <div className="gallery-box">
-      <ul className="gallery">{children}</ul>
-    </div>
+    <GalleryBox className="gallery-box">
+      <Gallery className="gallery">{children}</Gallery>
+    </GalleryBox>
   );
 };

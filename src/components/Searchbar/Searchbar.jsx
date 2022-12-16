@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { toast } from 'react-toastify';
 import { BsSearch } from 'react-icons/bs';
-import './Searchbar.css';
+import { SearchbarForm, Form, Button, Input } from './Searchbar.styled';
 
 export class Searchbar extends Component {
   state = {
@@ -28,16 +28,15 @@ export class Searchbar extends Component {
   render() {
     const { searchQuery } = this.state;
     return (
-      <header className="searchbar">
-        <form className="form" onSubmit={this.handleSubmit}>
-          <button type="submit" className="button">
-            <span className="button-label">
-              <BsSearch size={25} />
+      <SearchbarForm>
+        <Form onSubmit={this.handleSubmit}>
+          <Button type="submit">
+            <span>
+              <BsSearch size={20} />
             </span>
-          </button>
+          </Button>
 
-          <input
-            className="input"
+          <Input
             type="text"
             autoComplete="off"
             autoFocus
@@ -46,8 +45,8 @@ export class Searchbar extends Component {
             value={searchQuery}
             onChange={this.handleChange}
           />
-        </form>
-      </header>
+        </Form>
+      </SearchbarForm>
     );
   }
 }

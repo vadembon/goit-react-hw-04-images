@@ -1,9 +1,9 @@
 import { Circles } from 'react-loader-spinner';
-import './Loader.css';
+import { LoaderApp } from './Loader.styled';
 
 export const Loader = () => {
   return (
-    <div className="loader">
+    <LoaderApp>
       <Circles
         height="80"
         width="80"
@@ -13,6 +13,6 @@ export const Loader = () => {
         wrapperClass=""
         visible={true}
       />
-    </div>
+    </LoaderApp>
   );
 };

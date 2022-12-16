@@ -1,20 +1,19 @@
 import PropTypes from 'prop-types';
-import './ImageGalleryItem.css';
-
+import { GalleryItem, Image } from './ImageGalleryItem.styled';
 export const ImageGalleryItem = ({ image, onClickImg }) => {
   const handleImgClick = evt => {
     onClickImg(image.largeImageURL);
   };
 
   return (
-    <li className="gallery-item">
-      <img
+    <GalleryItem className="gallery-item">
+      <Image
         className="image"
         src={image.previewURL}
         alt={image.tags}
         onClick={handleImgClick}
       />
-    </li>
+    </GalleryItem>
   );
 };
 

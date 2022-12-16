@@ -1,4 +1,6 @@
-.searchbar {
+import styled from 'styled-components';
+
+export const SearchbarForm = styled.header`
   top: 0;
   left: 0;
   position: sticky;
@@ -15,9 +17,8 @@
   background-color: #3f51b5;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
     0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-}
-
-.form {
+`;
+export const Form = styled.form`
   display: flex;
   align-items: center;
   width: 100%;
@@ -25,24 +26,20 @@
   background-color: #fff;
   border-radius: 3px;
   overflow: hidden;
-}
+`;
 
-.button {
+export const Button = styled.button`
   margin-left: auto;
-  padding: 15px;
+  padding: 10px;
   background-color: #ddd;
   color: #222;
   border: none;
   border-radius: 6px 0 0 6px;
   cursor: pointer;
   transition: background-color 300ms linear, color 300ms linear;
-}
+`;
 
-.search-icon {
-  fill: currentColor;
-}
-
-.input {
+export const Input = styled.input`
   display: inline-block;
   width: 100%;
   font: inherit;
@@ -51,13 +48,8 @@
   outline: none;
   padding-left: 4px;
   padding-right: 4px;
-}
-
-.input::placeholder {
-  font: inherit;
-  font-size: 18px;
-}
-
-/*
- * Стили компонента ImageGallery
- */
+  &::placeholder {
+    font: inherit;
+    font-size: 18px;
+  }
+`;
