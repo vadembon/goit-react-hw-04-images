@@ -1,4 +1,5 @@
-import { Component } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getImgGallery } from './serviceApi';
@@ -10,93 +11,81 @@ import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
 
-export class App extends Component {
-  state = {
-    searchQuery: '',
-    page: 1,
-    imageGalleryBox: [],
-    loadMore: false,
-    isLoading: false,
-    isModalOpen: false,
-    modalImage: '',
-  };
-  async componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.searchQuery !== this.state.searchQuery ||
-      prevState.page !== this.state.page
-    ) {
-      this.setState({ isLoading: true });
-      try {
-        const imageGalleryBox = await getImgGallery(
-          this.state.searchQuery,
-          this.state.page
-        );
+export const App = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [imageGalleryBox, setImageGalleryBox] = useState([]);
+  const [loadMore, setLoadMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState('');
 
-        this.setState({ loadMore: true });
-        if (imageGalleryBox.length === 0) {
-          toast.warn('Sorry, but no such pictures were found!');
-          this.setState({ loadMore: false, imageGalleryBox: [] });
-        }
-
-        if (imageGalleryBox.length < 12) {
-          this.setState({ loadMore: false });
-        }
-
-        this.setState({
-          imageGalleryBox: [...this.state.imageGalleryBox, ...imageGalleryBox],
-        });
-      } catch (error) {
-        return toast.error('error');
-      } finally {
-        this.setState({ isLoading: false });
-      }
+  useEffect(() => {
+    if (!searchQuery) {
+      return;
     }
-  }
+    setIsLoading(true);
+    const imgGalleryBox = getImgGallery(searchQuery, page);
+    setLoadMore(true);
+    imgGalleryBox
+      .then(res => {
+        if (res.length === 0) {
+          toast.warn('Sorry, but no such pictures were found!');
+          setLoadMore(false);
+          setImageGalleryBox([]);
+        }
+        if (res.length < 12) {
+          setLoadMore(false);
+        }
+        setImageGalleryBox([...imageGalleryBox, ...res]);
+      })
+      .catch(error => {
+        return toast.error('error');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [searchQuery, page]);
 
-  handleFormSubmit = searchQuery => {
-    this.setState({ searchQuery: searchQuery, page: 1, imageGalleryBox: [] });
+  const handleFormSubmit = searchQuery => {
+    setSearchQuery(searchQuery);
+    setPage(1);
+    setImageGalleryBox([]);
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const loadMoreImg = () => {
+    setPage(page + 1);
   };
 
-  toggleModal = () => {
-    this.setState(({ isModalOpen }) => ({ isModalOpen: !isModalOpen }));
+  const toggleModal = () => {
+    setIsModalOpen(isModalOpen => !isModalOpen);
   };
 
-  imageClickHandler = url => {
-    this.setState({ modalImage: url });
-    this.toggleModal();
+  const imageClickHandler = url => {
+    setModalImage(url);
+    toggleModal();
   };
 
-  render() {
-    const { imageGalleryBox, isLoading, loadMore, isModalOpen, modalImage } =
-      this.state;
-
-    return (
-      <div>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery>
-          {imageGalleryBox.map(image => (
-            <ImageGalleryItem
-              key={image.id}
-              image={image}
-              onClickImg={this.imageClickHandler}
-            ></ImageGalleryItem>
-          ))}
-        </ImageGallery>
-        {loadMore && <Button LoadMoreBtn={this.loadMore} />}
-        {isLoading && <Loader />}
-        {isModalOpen && (
-          <Modal onClose={this.toggleModal}>
-            <img src={modalImage} alt={imageGalleryBox.tags} />
-          </Modal>
-        )}
-        <ToastContainer position="top-right" theme="colored" autoClose={2000} />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Searchbar onSubmit={handleFormSubmit} />
+      <ImageGallery>
+        {imageGalleryBox.map(image => (
+          <ImageGalleryItem
+            key={image.id}
+            image={image}
+            onClickImg={imageClickHandler}
+          ></ImageGalleryItem>
+        ))}
+      </ImageGallery>
+      {loadMore && <Button LoadMoreBtn={loadMoreImg} />}
+      {isLoading && <Loader />}
+      {isModalOpen && (
+        <Modal onClose={toggleModal}>
+          <img src={modalImage} alt={imageGalleryBox.tags} />
+        </Modal>
+      )}
+      <ToastContainer position="top-right" theme="colored" autoClose={2000} />
+    </div>
+  );
+};
